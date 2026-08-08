@@ -8,14 +8,28 @@ from homeassistant.helpers.update_coordinator import (
 )
 
 from .const import (
-    CONF_LANGUAGE,
     CONF_POWER_LIMIT,
     CONF_WRITE_TO_SENSOR,
-    DEFAULT_LANGUAGE,
     DEFAULT_WRITE_TO_SENSOR,
+    SENSOR_CAN_REACH_FULL,
+    SENSOR_CHARGE_SOURCE,
+    SENSOR_HOUSE_POWER,
+    SENSOR_MAX_POWER,
+    SENSOR_MISSING_ENERGY,
+    SENSOR_NEG_PRICE_HOURS_TODAY,
+    SENSOR_NEG_PRICE_HOURS_TOMORROW,
+    SENSOR_POSSIBLE_SOC,
+    SENSOR_PRICE,
+    SENSOR_PV_POWER,
+    SENSOR_PV_REMAINING,
+    SENSOR_PV_SURPLUS,
+    SENSOR_RECOMMENDATION,
+    SENSOR_RECOMMENDATION_REASON,
+    SENSOR_RECOMMENDED_CHARGE_POWER,
+    SENSOR_RECOMMENDED_CHARGE_POWER_EXACT,
+    SENSOR_SOC,
 )
 from .energy_model import EnergyModel
-from .language import text
 from .sensor_reader import SensorReader
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,44 +54,38 @@ class PVBatteryOptimizerCoordinator(DataUpdateCoordinator):
         )
 
     async def _async_update_data(self) -> dict:
-        """Lese Sensorwerte, berechne Optimierungsdaten und schreibe ggf. auf den Wechselrichter."""
+        """Lese Sensorwerte und berechne Optimierungsdaten."""
         _LOGGER.debug("Coordinator Update")
 
         try:
             energy_data = self.reader.read()
             model = EnergyModel(energy_data)
             recommendation = model.recommendation()
-            language = self.config.get(CONF_LANGUAGE, DEFAULT_LANGUAGE)
 
             result = {
-                "soc": energy_data.soc,
-                "pv_power": energy_data.pv_power,
-                "pv_remaining": energy_data.pv_remaining,
-                "house_power": energy_data.house_power,
-                "price": energy_data.price if energy_data.price is not None else 0.0,
-                "max_power": energy_data.max_power,
-                "missing_energy": round(model.missing_energy(), 2),
-                "pv_surplus": round(model.pv_surplus(), 0),
-                "possible_soc": round(model.possible_soc_today(), 1),
-                "can_reach_full": model.can_reach_full(),
-                "should_charge_from_grid": recommendation["should_charge_from_grid"],
-                "recommended_charge_power": recommendation["recommended_power"],
-                "recommended_charge_power_exact": recommendation.get(
+                SENSOR_SOC: energy_data.soc,
+                SENSOR_PV_POWER: energy_data.pv_power,
+                SENSOR_PV_REMAINING: energy_data.pv_remaining,
+                SENSOR_HOUSE_POWER: energy_data.house_power,
+                SENSOR_PRICE: energy_data.price if energy_data.price is not None else 0.0,
+                SENSOR_MAX_POWER: energy_data.max_power,
+                SENSOR_MISSING_ENERGY: round(model.missing_energy(), 2),
+                SENSOR_PV_SURPLUS: round(model.pv_surplus(), 0),
+                SENSOR_POSSIBLE_SOC: round(model.possible_soc_today(), 1),
+                SENSOR_CAN_REACH_FULL: model.can_reach_full(),
+                SENSOR_RECOMMENDATION: recommendation["action"],
+                SENSOR_CHARGE_SOURCE: recommendation["source"],
+                SENSOR_RECOMMENDATION_REASON: recommendation["reason"],
+                SENSOR_RECOMMENDED_CHARGE_POWER: recommendation["recommended_power"],
+                SENSOR_RECOMMENDED_CHARGE_POWER_EXACT: recommendation.get(
                     "recommended_power_exact", recommendation["recommended_power"]
                 ),
-                "negative_price_hours_today": (
+                SENSOR_NEG_PRICE_HOURS_TODAY: (
                     self.reader.negative_price_hours("today")
                 ),
-                "negative_price_hours_tomorrow": (
+                SENSOR_NEG_PRICE_HOURS_TOMORROW: (
                     self.reader.negative_price_hours("tomorrow")
                 ),
-                "recommendation": text(
-                    language, f"action_{recommendation['action']}"
-                ),
-                "charge_source": text(
-                    language, f"source_{recommendation['source']}"
-                ),
-                "recommendation_reason": text(language, recommendation["reason"]),
             }
 
         except Exception as err:
@@ -86,52 +94,41 @@ class PVBatteryOptimizerCoordinator(DataUpdateCoordinator):
                 f"Sensorwerte konnten nicht verarbeitet werden: {err}"
             ) from err
 
-        _LOGGER.debug(
-            "OPTIMIZER DATA: SOC=%s PV=%s HOUSE=%s PRICE=%s POWER=%s REASON=%s",
-            energy_data.soc,
-            energy_data.pv_power,
-            energy_data.house_power,
-            energy_data.price,
-            result["recommended_charge_power"],
-            result["recommendation_reason"],
-        )
-
-        # Empfohlene Ladeleistung direkt auf den Wechselrichter schreiben
-        write_enabled = self.config.get(CONF_WRITE_TO_SENSOR, DEFAULT_WRITE_TO_SENSOR)
-        if write_enabled:
-            power_entity = self.config.get(CONF_POWER_LIMIT)
-            power_value = result["recommended_charge_power"]
-
-            if power_entity and power_value is not None:
-                # Wechselrichter akzeptiert keinen Wert unter seinem min-Attribut.
-                # Bei 0 W (kein Entladeschutz nötig) den kleinsten erlaubten Wert nutzen.
-                state = self.hass.states.get(power_entity)
-                if state is not None and power_value == 0:
-                    try:
-                        min_val = float(state.attributes.get("min", 0))
-                        power_value = min_val
-                    except (ValueError, TypeError):
-                        pass
-                try:
-                    await self.hass.services.async_call(
-                        "number",
-                        "set_value",
-                        {
-                            "entity_id": power_entity,
-                            "value": power_value,
-                        },
-                        blocking=False,
-                    )
-                    _LOGGER.debug(
-                        "Ladeleistung gesetzt: %s W → %s",
-                        power_value,
-                        power_entity,
-                    )
-                except Exception as err:
-                    _LOGGER.warning(
-                        "Fehler beim Schreiben der Ladeleistung auf %s: %s",
-                        power_entity,
-                        err,
-                    )
+        await self._async_write_power_to_device(result[SENSOR_RECOMMENDED_CHARGE_POWER])
 
         return result
+
+    async def _async_write_power_to_device(self, power_value: float) -> None:
+        """Schreibt die empfohlene Ladeleistung auf den Wechselrichter, falls aktiviert."""
+        write_enabled = self.config.get(CONF_WRITE_TO_SENSOR, DEFAULT_WRITE_TO_SENSOR)
+        if not write_enabled:
+            return
+
+        power_entity = self.config.get(CONF_POWER_LIMIT)
+        if not power_entity or power_value is None:
+            return
+
+        state = self.hass.states.get(power_entity)
+        if state is not None and power_value == 0:
+            try:
+                min_val = float(state.attributes.get("min", 0))
+                power_value = min_val
+            except (ValueError, TypeError):
+                pass
+
+        try:
+            await self.hass.services.async_call(
+                "number",
+                "set_value",
+                {
+                    "entity_id": power_entity,
+                    "value": power_value,
+                },
+                blocking=False,
+            )
+        except Exception as err:
+            _LOGGER.warning(
+                "Fehler beim Schreiben der Ladeleistung auf %s: %s",
+                power_entity,
+                err,
+            )
