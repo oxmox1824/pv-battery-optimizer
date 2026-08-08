@@ -1,5 +1,6 @@
 DOMAIN = "pv_battery_optimizer"
 
+# Config / Options Keys
 CONF_BATTERY_SOC = "battery_soc"
 CONF_POWER_LIMIT = "power_limit"
 CONF_NORDPOOL = "nordpool"
@@ -41,3 +42,22 @@ DEFAULT_EVENING_TARGET_HOURS = 2.0
 DEFAULT_PV_DAY_FACTOR = 1.5
 DEFAULT_DISCHARGE_BUFFER_POWER = 500.0
 DEFAULT_MAX_POWER_FALLBACK = 6000.0
+
+# Sensor Keys
+SENSOR_SOC = "soc"
+SENSOR_PV_POWER = "pv_power"
+SENSOR_PV_REMAINING = "pv_remaining"
+SENSOR_HOUSE_POWER = "house_power"
+SENSOR_PRICE = "price"
+SENSOR_MAX_POWER = "max_power"
+SENSOR_MISSING_ENERGY = "missing_energy"
+SENSOR_PV_SURPLUS = "pv_surplus"
+SENSOR_POSSIBLE_SOC = "possible_soc"
+SENSOR_RECOMMENDATION = "recommendation"
+SENSOR_CHARGE_SOURCE = "charge_source"
+SENSOR_RECOMMENDATION_REASON = "recommendation_reason"
+SENSOR_RECOMMENDED_CHARGE_POWER = "recommended_charge_power"
+SENSOR_RECOMMENDED_CHARGE_POWER_EXACT = "recommended_charge_power_exact"
+SENSOR_NEG_PRICE_HOURS_TODAY = "negative_price_hours_today"
+SENSOR_NEG_PRICE_HOURS_TOMORROW = "negative_price_hours_tomorrow"
+SENSOR_CAN_REACH_FULL = "can_reach_full"
