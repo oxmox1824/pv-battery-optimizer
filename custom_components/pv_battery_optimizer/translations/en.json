@@ -1,0 +1,168 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up PV Battery Optimizer",
+        "description": "Expand the sections below to configure all settings",
+        "data": {
+          "language": "Language",
+          "strategy": "Charging Strategy"
+        },
+        "data_description": {
+          "strategy": "Determines the objective used to calculate the recommended charge power"
+        },
+        "sections": {
+          "sensors": {
+            "name": "Sensors & Entities",
+            "data": {
+              "battery_soc": "Battery State of Charge (SOC)",
+              "house_power": "House Power Consumption",
+              "nordpool": "Electricity Spot Price (Nordpool)",
+              "power_limit": "Maximum Charge / Discharge Power",
+              "pv_power": "Current PV Total Power",
+              "pv_remaining": "PV Remaining Energy Today (multiple sensors allowed)",
+              "write_to_sensor": "Automatically set charge power"
+            },
+            "data_description": {
+              "battery_soc": "Sensor for the current battery state of charge in percent",
+              "house_power": "Sensor for the current house power consumption in watts",
+              "nordpool": "Sensor for the current electricity spot price in ct/kWh",
+              "power_limit": "Entity for setting the maximum charge and discharge power (e.g. number.battery_max_charge_power)",
+              "pv_power": "Sensor for the current total PV power in watts (sum sensor of all roof surfaces)",
+              "pv_remaining": "Sensors for the remaining PV energy today in kWh – multiple sensors are summed",
+              "write_to_sensor": "Enables automatic writing of the recommended charge power to the inverter entity (e.g. number.battery_max_charge_power) – default: disabled"
+            }
+          },
+          "battery": {
+            "name": "Battery Parameters",
+            "data": {
+              "battery_capacity": "Battery Capacity",
+              "min_soc": "Minimum State of Charge (Reserve)",
+              "target_soc": "Target State of Charge",
+              "charge_efficiency": "Charge Efficiency",
+              "discharge_efficiency": "Discharge Efficiency"
+            },
+            "data_description": {
+              "battery_capacity": "Usable battery capacity in kWh",
+              "min_soc": "Lower charge limit in percent – never goes below this value",
+              "target_soc": "Desired target state of charge in the evening",
+              "charge_efficiency": "Charging efficiency (typically 92–98 %)",
+              "discharge_efficiency": "Discharging efficiency (typically 92–98 %)"
+            }
+          },
+          "strategy_params": {
+            "name": "Strategy Parameters",
+            "data": {
+              "min_discharge_power": "Minimum Discharge Power (Night)",
+              "evening_target_soc": "Evening Target State of Charge",
+              "evening_target_hours": "Hours Before Sunset for Evening Target",
+              "pv_day_factor": "PV Day Mode Factor",
+              "discharge_buffer_power": "Discharge Buffer Power (PV below house)"
+            },
+            "data_description": {
+              "min_discharge_power": "Minimum power in watts set at night and with little PV so the battery can supply the house (recommended: 3000 W)",
+              "evening_target_soc": "State of charge in percent that the battery should reach at the start of the evening window (recommended: 85 %)",
+              "evening_target_hours": "How many hours before sunset the evening target SOC should be reached (recommended: 2 h)",
+              "pv_day_factor": "PV power must exceed house consumption by this factor before day mode activates (default 1.5 = 150 % of house consumption)",
+              "discharge_buffer_power": "Buffer in watts above house consumption when PV drops below house consumption – prevents grid draw during brief cloud cover (default 500 W)"
+            }
+          }
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure PV Battery Optimizer",
+        "description": "Expand the sections below to update all settings",
+        "data": {
+          "language": "Language",
+          "strategy": "Charging Strategy"
+        },
+        "data_description": {
+          "strategy": "Determines the objective used to calculate the recommended charge power"
+        },
+        "sections": {
+          "sensors": {
+            "name": "Sensors & Entities",
+            "data": {
+              "battery_soc": "Battery State of Charge (SOC)",
+              "house_power": "House Power Consumption",
+              "nordpool": "Electricity Spot Price (Nordpool)",
+              "power_limit": "Maximum Charge / Discharge Power",
+              "pv_power": "Current PV Total Power",
+              "pv_remaining": "PV Remaining Energy Today (multiple sensors allowed)",
+              "write_to_sensor": "Automatically set charge power"
+            }
+          },
+          "battery": {
+            "name": "Battery Parameters",
+            "data": {
+              "battery_capacity": "Battery Capacity",
+              "min_soc": "Minimum State of Charge (Reserve)",
+              "target_soc": "Target State of Charge",
+              "charge_efficiency": "Charge Efficiency",
+              "discharge_efficiency": "Discharge Efficiency"
+            }
+          },
+          "strategy_params": {
+            "name": "Strategy Parameters",
+            "data": {
+              "min_discharge_power": "Minimum Discharge Power (Night)",
+              "evening_target_soc": "Evening Target State of Charge",
+              "evening_target_hours": "Hours Before Sunset for Evening Target",
+              "pv_day_factor": "PV Day Mode Factor",
+              "discharge_buffer_power": "Discharge Buffer Power (PV below house)"
+            }
+          }
+        }
+      }
+    },
+    "abort": {
+      "reconfigure_successful": "Configuration updated successfully"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "PV Battery Optimizer – Settings",
+        "description": "Expand the sections below to update all settings",
+        "data": {
+          "language": "Language",
+          "strategy": "Charging Strategy"
+        },
+        "sections": {
+          "sensors": {
+            "name": "Sensors & Entities",
+            "data": {
+              "battery_soc": "Battery State of Charge (SOC)",
+              "house_power": "House Power Consumption",
+              "nordpool": "Electricity Spot Price (Nordpool)",
+              "power_limit": "Maximum Charge / Discharge Power",
+              "pv_power": "Current PV Total Power",
+              "pv_remaining": "PV Remaining Energy Today (multiple sensors allowed)",
+              "write_to_sensor": "Automatically set charge power"
+            }
+          },
+          "battery": {
+            "name": "Battery Parameters",
+            "data": {
+              "battery_capacity": "Battery Capacity",
+              "min_soc": "Minimum State of Charge (Reserve)",
+              "target_soc": "Target State of Charge",
+              "charge_efficiency": "Charge Efficiency",
+              "discharge_efficiency": "Discharge Efficiency"
+            }
+          },
+          "strategy_params": {
+            "name": "Strategy Parameters",
+            "data": {
+              "min_discharge_power": "Minimum Discharge Power (Night)",
+              "evening_target_soc": "Evening Target State of Charge",
+              "evening_target_hours": "Hours Before Sunset for Evening Target",
+              "pv_day_factor": "PV Day Mode Factor",
+              "discharge_buffer_power": "Discharge Buffer Power (PV below house)"
+            }
+          }
+        }
+      }
+    }
+  }
+}
