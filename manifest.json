@@ -1,0 +1,12 @@
+{
+  "domain": "pv_battery_optimizer",
+  "name": "PV Battery Optimizer",
+  "version": "1.0.0",
+  "config_flow": true,
+  "documentation": "https://github.com/YOUR_GITHUB_USER/pv-battery-optimizer",
+  "issue_tracker": "https://github.com/YOUR_GITHUB_USER/pv-battery-optimizer/issues",
+  "codeowners": ["@YOUR_GITHUB_USER"],
+  "dependencies": ["sun"],
+  "requirements": [],
+  "iot_class": "cloud_polling"
+}
