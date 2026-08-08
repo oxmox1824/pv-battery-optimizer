@@ -1,66 +1,60 @@
-PV Battery Optimizer
-Der PV Battery Optimizer ist eine intelligente Home-Assistant-Integration, die das Lademanagement deines PV-Speichersystems optimiert. Anstatt den Akku blind zu laden, berechnet diese Integration basierend auf dem Hausverbrauch, der PV-Prognose und Börsenstrompreisen den optimalen Ladezeitpunkt und die ideale Ladeleistung.
+# PV Battery Optimizer
 
-🚀 Kernfunktionen
-Intelligente Ladestrategie: Optimiert die Akkuladung für die EEG-Vergütung – lädt intelligent über den Tag verteilt, anstatt den Akku sofort morgens vollzupumpen.
+![Home Assistant](https://img.shields.io/badge/Home%20Assistant-Custom%20Integration-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
-Wetter- & Preisbasiert: Nutzt Sonnenuntergangsdaten und integriert optional Börsenstrompreise (Nordpool), um bei negativen Preisen proaktiv zu agieren.
+Der **PV Battery Optimizer** ist eine intelligente Home-Assistant-Integration, die das Lademanagement deines PV-Speichersystems optimiert. Anstatt den Akku blind zu laden, berechnet diese Integration basierend auf dem Hausverbrauch, der PV-Prognose und Strompreisen den optimalen Ladezeitpunkt und die ideale Ladeleistung.
 
-Batterieschonung: Verhindert unnötige Ladezyklen und schont die Zellchemie durch gleichmäßige Ladeprofile.
+---
 
-Automatisierte Steuerung: Kann die berechnete Ladeleistung direkt an deinen Wechselrichter senden (konfigurierbar).
+## 🚀 Kernfunktionen
 
-Volle Transparenz: Liefert eine Vielzahl an Sensoren für Dashboards (SOC, PV-Überschuss, erreichte Ladung, verbleibende Energie heute, etc.).
+*   **Intelligente Ladestrategie:** Optimiert die Akkuladung für die EEG-Vergütung – lädt intelligent über den Tag verteilt, anstatt den Akku sofort morgens vollzupumpen.
+*   **Wetter- & Preisbasiert:** Nutzt Sonnenuntergangsdaten und integriert Börsenstrompreise (Nordpool), um bei negativen Preisen proaktiv zu agieren.
+*   **Batterieschonung:** Verhindert unnötige Ladezyklen und schont die Zellchemie durch gleichmäßige Ladeprofile.
+*   **Automatisierte Steuerung:** Kann die berechnete Ladeleistung direkt an deinen Wechselrichter senden (konfigurierbar).
+*   **Volle Transparenz:** Liefert zahlreiche Sensoren für deine Dashboards (SOC, PV-Überschuss, erreichte Ladung, verbleibende Energie heute, etc.).
 
-⚡ Unterstützte Strategien
-Derzeit voll implementiert:
+---
 
-EEG-Vergütung optimieren: Maximiert den Eigenverbrauch und stellt sicher, dass der Speicher netzdienlich arbeitet und jederzeit entladefähig bleibt.
+## ⚡ Unterstützte Strategien
 
-In Vorbereitung (zukünftige Strategien):
+| Strategie | Status | Beschreibung |
+| :--- | :--- | :--- |
+| **EEG-Optimierung** | ✅ Voll implementiert | Maximiert Eigenverbrauch & Netzstabilität |
+| **Eigenverbrauch** | 🚧 In Planung | Priorisiert sofortige Eigenverbrauchsdeckung |
+| **Dynamische Preise** | 🚧 In Planung | Ladung bei günstigen/negativen Strompreisen |
+| **Netzdienlichkeit** | 🚧 In Planung | Vermeidung von Einspeisespitzen |
 
-Eigenverbrauch maximieren
+---
 
-Dynamische Preise nutzen (z.B. Tibber/Nordpool)
+## 📥 Installation
 
-Netzdienliches Verhalten
+1.  Öffne **HACS** in deinem Home Assistant.
+2.  Klicke auf die drei Punkte oben rechts -> **Benutzerdefinierte Repositories**.
+3.  Gib die URL dieses Repositorys ein und wähle **Integration** als Typ.
+4.  Klicke auf **Installieren**.
+5.  Starte Home Assistant neu.
+6.  Gehe zu **Einstellungen** -> **Geräte & Dienste** -> **Integration hinzufügen** und suche nach „PV Battery Optimizer“.
 
-🛠 Voraussetzungen
-Home Assistant (neueste Version empfohlen).
+---
 
-HACS (Home Assistant Community Store) installiert.
+## 📊 Konfiguration
 
-Zugriff auf die Sensoren deiner PV-Anlage (SOC, Hausverbrauch, PV-Leistung).
-
-Optional: Eine Entität zur Steuerung der Ladeleistung (z. B. ein number-Sensor deines Wechselrichters).
-
-📥 Installation
-Öffne HACS in Home Assistant.
-
-Klicke auf die drei Punkte oben rechts -> Benutzerdefinierte Repositories.
-
-Gib die URL dieses Repositorys ein und wähle Integration als Typ.
-
-Klicke auf Installieren.
-
-Starte Home Assistant neu.
-
-Gehe zu Einstellungen -> Geräte & Dienste -> Integration hinzufügen und suche nach „PV Battery Optimizer“.
-
-📊 Konfiguration
 Nach der Installation führt dich ein Einrichtungs-Assistent durch drei logische Schritte:
 
-Sensoren & Strategie: Verknüpfung der benötigten Entitäten.
+1.  **Sensoren & Strategie:** Verknüpfung der benötigten Entitäten (SOC, Hausverbrauch, PV-Leistung etc.).
+2.  **Batterie-Parameter:** Definition von Kapazität, Min/Max-SOC und Ladeeffizienz.
+3.  **Strategie-Parameter:** Feinabstimmung für die gewählte Optimierungsstrategie.
 
-Batterie-Parameter: Definition von Kapazität, Min/Max-SOC und Ladeeffizienz.
+---
 
-Strategie-Parameter: Feinabstimmung für die gewählte Optimierungsstrategie.
+## 📝 Support & Mitwirken
 
-📝 Support & Mitwirken
 Hast du Fragen, Verbesserungsvorschläge oder ein Problem gefunden?
+*   Öffne ein **[Issue](https://github.com/DEIN_GITHUB_USER/pv-battery-optimizer/issues)** in diesem Repository.
+*   Beiträge (Pull Requests) sind jederzeit willkommen!
 
-Öffne ein Issue in diesem Repository.
-
-Beiträge (Pull Requests) sind jederzeit willkommen!
-
-Entwickelt mit ❤️ für eine intelligentere Energiewende zu Hause.
+---
+*Entwickelt mit ❤️ für eine intelligentere Energiewende zu Hause.*
