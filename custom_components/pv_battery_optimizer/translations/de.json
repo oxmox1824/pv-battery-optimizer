@@ -1,170 +1,38 @@
 {
-  "config": {
-    "step": {
-      "user": {
-        "title": "Schritt 1 von 3 – Sensoren & Strategie",
-        "description": "Sprache, Ladestrategie und Sensor-Zuordnungen konfigurieren",
-        "data": {
-          "language": "Sprache",
-          "strategy": "Ladestrategie",
-          "battery_soc": "Batterie-Ladestand (SOC)",
-          "house_power": "Hausverbrauch",
-          "nordpool": "Börsenstrompreis (Nordpool)",
-          "power_limit": "Maximale Lade-/Entladeleistung",
-          "pv_power": "PV-Gesamtleistung aktuell",
-          "pv_remaining": "PV-Restenergie heute (mehrere Sensoren möglich)",
-          "write_to_sensor": "Ladeleistung automatisch setzen"
-        },
-        "data_description": {
-          "strategy": "Bestimmt nach welchem Ziel die Ladeleistung berechnet wird",
-          "battery_soc": "Sensor für den aktuellen Batterieladestand in Prozent",
-          "house_power": "Sensor für den aktuellen Hausverbrauch in Watt",
-          "nordpool": "Sensor für den aktuellen Börsenstrompreis in ct/kWh",
-          "power_limit": "Entität zum Setzen der maximalen Lade- und Entladeleistung (z.B. number.battery_max_charge_power)",
-          "pv_power": "Sensor für die aktuelle PV-Gesamtleistung in Watt (Summensensor aller Dachflächen)",
-          "pv_remaining": "Sensoren für die verbleibende PV-Energie heute in kWh – mehrere Sensoren werden addiert",
-          "write_to_sensor": "Aktiviert das automatische Schreiben der empfohlenen Ladeleistung auf den Wechselrichter (z.B. number.battery_max_charge_power) – Standard: deaktiviert"
+  "entity": {
+    "sensor": {
+      "recommendation": {
+        "state": {
+          "charge": "Laden",
+          "wait": "Warten"
         }
       },
-      "battery": {
-        "title": "Schritt 2 von 3 – Batterie-Parameter",
-        "description": "Kapazität, SOC-Grenzen und Wirkungsgrade einstellen",
-        "data": {
-          "battery_capacity": "Batteriekapazität",
-          "min_soc": "Mindest-Ladestand (Reserve)",
-          "target_soc": "Ziel-Ladestand",
-          "charge_efficiency": "Ladewirkungsgrad",
-          "discharge_efficiency": "Entladewirkungsgrad"
-        },
-        "data_description": {
-          "battery_capacity": "Nutzbare Kapazität der Batterie in kWh",
-          "min_soc": "Untere Ladegrenze in Prozent – wird nie unterschritten",
-          "target_soc": "Gewünschter Ziel-Ladestand am Abend",
-          "charge_efficiency": "Wirkungsgrad beim Laden (typisch 92–98 %)",
-          "discharge_efficiency": "Wirkungsgrad beim Entladen (typisch 92–98 %)"
+      "charge_source": {
+        "state": {
+          "pv": "PV",
+          "grid": "Netz",
+          "none": "Keine"
         }
       },
-      "strategy": {
-        "title": "Schritt 3 von 3 – Strategie-Parameter",
-        "description": "Entladeschutz, Abend-Fenster und Tagesmodus konfigurieren",
-        "data": {
-          "min_discharge_power": "Mindest-Entladeleistung (Nacht)",
-          "evening_target_soc": "Abend-Ziel-Ladestand",
-          "evening_target_hours": "Stunden vor Sonnenuntergang für Abend-Ziel",
-          "pv_day_factor": "PV-Tagesmodus-Faktor",
-          "discharge_buffer_power": "Entlade-Puffer bei PV-Unterschuss"
-        },
-        "data_description": {
-          "min_discharge_power": "Minimale Leistung in Watt die nachts und bei wenig PV gesetzt wird, damit die Batterie das Haus versorgen kann (empfohlen: 3000 W)",
-          "evening_target_soc": "Ladestand in Prozent, den die Batterie spätestens beim Beginn des Abend-Fensters erreicht haben soll (empfohlen: 85 %)",
-          "evening_target_hours": "Wie viele Stunden vor Sonnenuntergang der Abend-Ziel-Ladestand erreicht sein soll (empfohlen: 2 h)",
-          "pv_day_factor": "PV-Leistung muss den Hausverbrauch um diesen Faktor überschreiten, bevor der Tagesmodus aktiv wird (Standard 1,5 = 150 % des Hausverbrauchs)",
-          "discharge_buffer_power": "Puffer in Watt über dem Hausverbrauch bei PV-Unterschuss – verhindert Netzbezug bei kurzzeitiger Bewölkung (Standard 500 W)"
+      "recommendation_reason": {
+        "state": {
+          "battery_target_reached": "Batterie-Ziel erreicht",
+          "minimum_soc_protection": "Mindest-SOC-Schutz",
+          "negative_price_max_charge": "Negativer Börsenpreis – maximales Laden",
+          "no_pv_discharge_protection": "Kein PV – Entladefähigkeit gesichert",
+          "evening_discharge_phase": "Abendphase – Akku entladen",
+          "morning_discharge_phase": "Morgenphase – Akku entladen",
+          "evening_target_charge": "Abend-Ziel aufladen",
+          "pv_below_house_power": "PV unter Hausverbrauch – Entladeschutz",
+          "day_slow_charge": "Tagesmodus – langsames Laden",
+          "sunset_unknown": "Sonnenuntergang unbekannt",
+          "strategy_not_implemented": "Strategie nicht implementiert"
         }
       },
-      "reconfigure": {
-        "title": "Neu konfigurieren – Schritt 1 von 3: Sensoren & Strategie",
-        "description": "Sprache, Ladestrategie und Sensor-Zuordnungen anpassen",
-        "data": {
-          "language": "Sprache",
-          "strategy": "Ladestrategie",
-          "battery_soc": "Batterie-Ladestand (SOC)",
-          "house_power": "Hausverbrauch",
-          "nordpool": "Börsenstrompreis (Nordpool)",
-          "power_limit": "Maximale Lade-/Entladeleistung",
-          "pv_power": "PV-Gesamtleistung aktuell",
-          "pv_remaining": "PV-Restenergie heute (mehrere Sensoren möglich)",
-          "write_to_sensor": "Ladeleistung automatisch setzen"
-        },
-        "data_description": {
-          "strategy": "Bestimmt nach welchem Ziel die Ladeleistung berechnet wird",
-          "battery_soc": "Sensor für den aktuellen Batterieladestand in Prozent",
-          "house_power": "Sensor für den aktuellen Hausverbrauch in Watt",
-          "nordpool": "Sensor für den aktuellen Börsenstrompreis in ct/kWh",
-          "power_limit": "Entität zum Setzen der maximalen Lade- und Entladeleistung",
-          "pv_power": "Sensor für die aktuelle PV-Gesamtleistung in Watt",
-          "pv_remaining": "Sensoren für die verbleibende PV-Energie heute in kWh – mehrere Sensoren werden addiert",
-          "write_to_sensor": "Aktiviert das automatische Schreiben der empfohlenen Ladeleistung auf den Wechselrichter (z.B. number.battery_max_charge_power) – Standard: deaktiviert"
-        }
-      },
-      "reconfigure_battery": {
-        "title": "Neu konfigurieren – Schritt 2 von 3: Batterie-Parameter",
-        "description": "Kapazität, SOC-Grenzen und Wirkungsgrade anpassen",
-        "data": {
-          "battery_capacity": "Batteriekapazität",
-          "min_soc": "Mindest-Ladestand (Reserve)",
-          "target_soc": "Ziel-Ladestand",
-          "charge_efficiency": "Ladewirkungsgrad",
-          "discharge_efficiency": "Entladewirkungsgrad"
-        },
-        "data_description": {
-          "battery_capacity": "Nutzbare Kapazität der Batterie in kWh",
-          "min_soc": "Untere Ladegrenze in Prozent – wird nie unterschritten",
-          "target_soc": "Gewünschter Ziel-Ladestand am Abend",
-          "charge_efficiency": "Wirkungsgrad beim Laden (typisch 92–98 %)",
-          "discharge_efficiency": "Wirkungsgrad beim Entladen (typisch 92–98 %)"
-        }
-      },
-      "reconfigure_strategy": {
-        "title": "Neu konfigurieren – Schritt 3 von 3: Strategie-Parameter",
-        "description": "Entladeschutz, Abend-Fenster und Tagesmodus anpassen",
-        "data": {
-          "min_discharge_power": "Mindest-Entladeleistung (Nacht)",
-          "evening_target_soc": "Abend-Ziel-Ladestand",
-          "evening_target_hours": "Stunden vor Sonnenuntergang für Abend-Ziel",
-          "pv_day_factor": "PV-Tagesmodus-Faktor",
-          "discharge_buffer_power": "Entlade-Puffer bei PV-Unterschuss"
-        },
-        "data_description": {
-          "min_discharge_power": "Minimale Leistung in Watt die nachts und bei wenig PV gesetzt wird (empfohlen: 3000 W)",
-          "evening_target_soc": "Ladestand in Prozent beim Beginn des Abend-Fensters (empfohlen: 85 %)",
-          "evening_target_hours": "Stunden vor Sonnenuntergang für das Abend-Ziel (empfohlen: 2 h)",
-          "pv_day_factor": "PV-Leistung muss den Hausverbrauch um diesen Faktor überschreiten (Standard 1,5 = 150 % des Hausverbrauchs)",
-          "discharge_buffer_power": "Puffer in Watt über dem Hausverbrauch bei PV-Unterschuss (Standard 500 W)"
-        }
-      }
-    },
-    "abort": {
-      "reconfigure_successful": "Konfiguration erfolgreich aktualisiert"
-    }
-  },
-  "options": {
-    "step": {
-      "init": {
-        "title": "Einstellungen – Schritt 1 von 3: Sensoren & Strategie",
-        "description": "Sprache, Ladestrategie und Sensor-Zuordnungen anpassen",
-        "data": {
-          "language": "Sprache",
-          "strategy": "Ladestrategie",
-          "battery_soc": "Batterie-Ladestand (SOC)",
-          "house_power": "Hausverbrauch",
-          "nordpool": "Börsenstrompreis (Nordpool)",
-          "power_limit": "Maximale Lade-/Entladeleistung",
-          "pv_power": "PV-Gesamtleistung aktuell",
-          "pv_remaining": "PV-Restenergie heute (mehrere Sensoren möglich)",
-          "write_to_sensor": "Ladeleistung automatisch setzen"
-        }
-      },
-      "battery": {
-        "title": "Einstellungen – Schritt 2 von 3: Batterie-Parameter",
-        "description": "Kapazität, SOC-Grenzen und Wirkungsgrade anpassen",
-        "data": {
-          "battery_capacity": "Batteriekapazität",
-          "min_soc": "Mindest-Ladestand (Reserve)",
-          "target_soc": "Ziel-Ladestand",
-          "charge_efficiency": "Ladewirkungsgrad",
-          "discharge_efficiency": "Entladewirkungsgrad"
-        }
-      },
-      "strategy": {
-        "title": "Einstellungen – Schritt 3 von 3: Strategie-Parameter",
-        "description": "Entladeschutz, Abend-Fenster und Tagesmodus anpassen",
-        "data": {
-          "min_discharge_power": "Mindest-Entladeleistung (Nacht)",
-          "evening_target_soc": "Abend-Ziel-Ladestand",
-          "evening_target_hours": "Stunden vor Sonnenuntergang für Abend-Ziel",
-          "pv_day_factor": "PV-Tagesmodus-Faktor",
-          "discharge_buffer_power": "Entlade-Puffer bei PV-Unterschuss"
+      "can_reach_full": {
+        "state": {
+          "True": "Ja",
+          "False": "Nein"
         }
       }
     }
